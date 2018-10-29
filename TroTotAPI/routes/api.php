@@ -22,7 +22,7 @@ Route:: group([
   Route::post('/login','ControllerAuth@login');
 
   Route::get('/post-room','ControllerPostRoom@index');
-  // Route::post('/post-room','ControllerPostRoom@store');
+  Route::post('/post-room','ControllerPostRoom@store');
   Route::get('/post-room/{id}','ControllerPostRoom@show');
 
 });

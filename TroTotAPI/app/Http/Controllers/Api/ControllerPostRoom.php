@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\PostRoom;
 use App\Models\RoomDetails;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Validator;
 
-class ControllerPostRoom extends Controller
+class ControllerPostRoom extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -16,9 +18,14 @@ class ControllerPostRoom extends Controller
      */
     public function index()
     {
-      $limit=request()->limit ?:10;
-      $postRoom=PostRoom::where('post_type_id',1)->orderBy('created_at','desc')->paginate($limit);
-      return $postRoom;
+      $limit = request()->limit ?: 10;
+        $postRoom = PostRoom::orderBy('created_at','desc')->paginate($limit);
+        foreach($postRoom as $post){
+            // $post->created_at = $post->created_at->format('d M Y');
+            $post->user;
+            $post->gallery;
+        }
+        return $this->setStatusCode(200)->withSuccess('index', $postRoom);
     }
 
     /**
@@ -39,13 +46,40 @@ class ControllerPostRoom extends Controller
      */
     public function store(Request $request)
     {
-      try{
-        $data=$this->dataFilter($request);
-        $postRoom=PostRoom::create($data);
-        $roomDetail=RoomDetails::create(['post_id'=>$postRoom->id]);
-      }catch(\Exception $e){
-        echo 'exeption 500';
-      }
+      // $rules = $this->initRule();
+      //   $messages = $this->initMessage();
+      //   $validator = Validator::make($request->all());
+      //   if ($validator->fails()) {
+      //       return $this->setStatusCode(400)->setErrors($validator->messages())->withError('error');
+      //   } else {
+            try {
+
+                $postRoom=new PostRoom;
+                $postRoom->post_type_id=$request->post_type_id;
+                $postRoom->room_type_id=$request->room_type_id;
+                $postRoom->user_id=$request->user_id;
+                $postRoom->title=$request->title;
+                $postRoom->price=$request->post_id;
+                $postRoom->minPrice=$request->minPrice;
+                $postRoom->maxPrice=$request->maxPrice;
+                $postRoom->address=$request->address;
+                $postRoom->phone=$request->phone;
+                $postRoom->address=$request->address;
+                $postRoom->save();
+                $roomDetail=new RoomDetails;
+                $roomDetail->post_id=$postRoom->id;
+                $roomDetail->aceage=$request->aceage;
+                $roomDetail->minAceage=$request->minAceage;
+                $roomDetail->maxAceage=$request->maxAceage;
+                $roomDetail->description=$request->description;
+                $roomDetail->longitute=$request->longitute;
+                $roomDetail->latitude=$request->latitude;
+                $roomDetail->save();
+                return $this->withSuccess('Stored', $postRoom);
+            } catch (\Exception $e) {
+                return $this->setStatusCode(500)->withError($e->getMessage());
+            }
+        // }
     }
 
     /**
@@ -97,11 +131,44 @@ class ControllerPostRoom extends Controller
     // {
     //   $pureData=[];
     //   $pureData=['post_type_id']=$data->post_type_id;
-    //   $pureData=['user_id']=$data->user_id;
-    //   $pureData=['tittle']=$data->tittle;
-    //   $pureData=['price']=$data->price;
     //   $pureData=['room_type_id']=$data->room_type_id;
+    //   $pureData=['user_id']=$data->user_id;
+    //   $pureData=['title']=$data->title;
+    //   $pureData=['price']=$data->price;
+    //   $pureData=['minPrice']=$data->minPrice;
+    //   $pureData=['maxPrice']=$data->maxPrice;
+    //   $pureData=['price']=$data->price;
+    //   $pureData=['price']=$data->price;
+    //
     //   $pureData=['phone']=$data->post_type_id;
     //   return $pureData;
     // }
+
+    public function initRule(){
+      $rules = [];
+      $rules['address'] = 'required|string|max:255';
+      // $rules['phone'] = 'required|string|max:255';
+      // $rules['acreage'] = 'required|integer';
+      // $rules['electric_bill'] = 'required|integer';
+      // $rules['water_bill'] = 'required|integer';
+      // $rules['rate'] = 'required|integer';
+      return $rules;
+  }
+  /**
+   * Init Message for notification if got error
+   *
+   * @return void
+   */
+  public function initMessage(){
+      $messages = [];
+      $messages = [
+          'address' => "Please update the room's address",
+          // 'phone' => "Please update the room's phone contract",
+          // 'acreage' => "You've input wrong value for arceage",
+          // 'electric_bill' => "You've input wrong value for electric bill",
+          // 'water_bill' => "You've input wrong value for water bill",
+          // 'room_bill' => "You've input wrong value for room bill",
+      ];
+      return $messages;
+  }
 }
