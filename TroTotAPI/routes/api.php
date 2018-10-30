@@ -21,8 +21,12 @@ Route:: group([
   Route::post('/register','ControllerAuth@register');
   Route::post('/login','ControllerAuth@login');
 
+  //post
   Route::get('/post-room','ControllerPostRoom@index');
   Route::post('/post-room','ControllerPostRoom@store');
   Route::get('/post-room/{id}','ControllerPostRoom@show');
+
+  //galerys
+  Route::post('media/upload_file','MediaController@uploadfile');
 
 });

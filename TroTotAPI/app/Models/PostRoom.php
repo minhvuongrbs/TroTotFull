@@ -10,8 +10,11 @@ class PostRoom extends Model
 
     public function room_detail()
     {
-      return $this->belongsTo('Models\RoomDetails','id','post_id');
+      return $this->belongsTo('App\Models\RoomDetails','id','post_id');
     }
 
+    public function galerys(){
+      return $this->hasMany('App\Models\GalleryPostRoom','id','post_id');
+    }
 
 }

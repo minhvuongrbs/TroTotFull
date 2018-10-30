@@ -90,7 +90,8 @@ class ControllerPostRoom extends ApiController
      */
     public function show($id)
     {
-        $postRoom=PostRoom::where('post_id', $id)->first();
+        $postRoom=PostRoom::where('id', $id)->first();
+        $postRoom->room_detail;
         return $postRoom;
     }
 
