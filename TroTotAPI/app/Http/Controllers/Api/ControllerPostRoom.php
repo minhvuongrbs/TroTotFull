@@ -129,7 +129,7 @@ class ControllerPostRoom extends ApiController
     }
     public function edit($id)
     {
-        //
+        //edit something
     }
 
     /**
