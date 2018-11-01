@@ -16,5 +16,9 @@ class PostRoom extends Model
     public function galerys(){
       return $this->hasMany('App\Models\GalleryPostRoom','id','post_id');
     }
+    public function user()
+    {
+      return $this->belongsTo('App\Models\User','user_id','id');
+    }
 
 }

@@ -8,4 +8,8 @@ class RoomDetails extends Model
 {
     public $timestamps=false;
     protected $table='rooms_detail';
+    public function post_room()
+    {
+      return $this->belongsTo('App\Models\PostRoom','id','post_id');
+    }
 }

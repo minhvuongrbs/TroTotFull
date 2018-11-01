@@ -8,6 +8,7 @@ use App\Models\RoomDetails;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
+use DB;
 
 class ControllerPostRoom extends ApiController
 {
@@ -90,10 +91,16 @@ class ControllerPostRoom extends ApiController
      */
     public function show($id)
     {
-        $postRoom=PostRoom::where('id', $id)->first();
-        $postRoom->room_detail;
-        return $postRoom;
+        try{
+          $postRoom=PostRoom::where('id', $id)->first();
+          $postRoom->room_detail;
+          $postRoom->user;
+          return $this->withSuccess('show',$postRoom);
+        }catch(\Exception $e){
+          return $this->setStatusCode(500)->withError($e->getMessage());
+        }
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -101,6 +108,25 @@ class ControllerPostRoom extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+
+    public function show_map()
+    {
+      try{
+        $mytime = Carbon::now()->subDays(14);
+        // echo $mytime;
+        $map=DB::table('posts')
+        ->join('rooms_detail','posts.id','=','rooms_detail.post_id')
+        ->select('post_id','longitute','latitude','title')
+          ->where('longitute','!=',null)
+        ->where('latitude','!=',null)
+        ->where('created_at','>',$mytime)
+        ->get();
+        return $this->withSuccess('showMap',$map);
+      }catch(\Exception $e){
+        return $this->setStatusCode(500)->withError($e->getMessage());
+      }
+    }
     public function edit($id)
     {
         //
