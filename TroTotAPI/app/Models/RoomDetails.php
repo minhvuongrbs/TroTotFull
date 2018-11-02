@@ -1,4 +1,4 @@
-<?php
+<?phpRoutes
 
 namespace App\Models;
 
@@ -12,4 +12,5 @@ class RoomDetails extends Model
     {
       return $this->belongsTo('App\Models\PostRoom','id','post_id');
     }
+
 }

@@ -24,4 +24,12 @@ Route:: group([
   Route::get('map','ControllerPostRoom@show_map');
   //galerys
   Route::post('media/upload_file','MediaController@uploadfile');
+
+  //comments
+  Route::post('comment','CommentController@store');
+  Route::get('comment/{id}','CommentController@show');
+
+  //notifications
+  Route::get('notifications/{id}','NotificationController@show');
+  
 });
