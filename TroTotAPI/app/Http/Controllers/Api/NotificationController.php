@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Notification;
 use App\Models\Comment;
 
-class NotificationController extends Controller
+class NotificationController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +16,7 @@ class NotificationController extends Controller
      */
     public function index()
     {
-        //
+
     }
 
     /**
@@ -48,8 +48,10 @@ class NotificationController extends Controller
      */
     public function show($id)
     {
-        // $notification=Notification::
-        //   ->where('post_id')
+        $notification=Notification::
+          where('user_id',$id)
+          ->get();
+        return $this->setStatusCode(200)->withSuccess('show',$notification);
     }
 
     /**
