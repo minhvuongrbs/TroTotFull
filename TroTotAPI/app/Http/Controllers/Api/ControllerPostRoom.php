@@ -23,8 +23,8 @@ class ControllerPostRoom extends ApiController
         $postRoom = PostRoom::orderBy('created_at','desc')->paginate($limit);
         foreach($postRoom as $post){
             // $post->created_at = $post->created_at->format('d M Y');
-            $post->user;
-            $post->gallery;
+            // $post->user;
+            // $post->gallery;
         }
         return $this->setStatusCode(200)->withSuccess('index', $postRoom);
     }
@@ -45,6 +45,28 @@ class ControllerPostRoom extends ApiController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+     public function result(Request $request)
+     {
+       $address='%'.$request->address.'%';
+       if($request->address=='null')
+          $address='%'.''.'%';
+      if($request->price <=300000){
+            $min = 0;
+            $max= 10000000;
+        }
+        else{
+          $min=$request->price -300000;
+          $max=$request->price +300000;
+        }
+       $postRoom=PostRoom::
+       where('address','like',$address)
+       ->where('price','>=',$min)
+       ->where('price','<=',$max)
+       ->get();
+       return $this->setStatusCode(200)->withSuccess('search',$postRoom);
+
+     }
+
     public function store(Request $request)
     {
       // $rules = $this->initRule();

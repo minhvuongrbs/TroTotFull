@@ -22,6 +22,7 @@ Route:: group([
   Route::post('/post-room','ControllerPostRoom@store');
   Route::get('/post-room/{id}','ControllerPostRoom@show');
   Route::get('map','ControllerPostRoom@show_map');
+  Route::post('search','ControllerPostRoom@result');
   //galerys
   Route::post('media/upload_file','MediaController@uploadfile');
 
@@ -31,5 +32,5 @@ Route:: group([
 
   //notifications
   Route::get('notifications/{id}','NotificationController@show');
-  
+
 });
